@@ -1,0 +1,56 @@
+{
+  "savePath": null,
+  "templatePath": null,
+  "sheets": [
+    {
+      "nameSheet": "Informacion",
+      "slots": [
+        {
+          "name": "Panorámica del Site",
+          "cells": "C38:F41",
+          "photos": []
+        }
+      ]
+    },
+    {
+      "nameSheet": "Reporte Instalacion",
+      "slots": [
+        {
+          "name": "GABINETE - Puerta Abierta",
+          "cells": "A10:D13",
+          "photos": []
+        },
+        {
+          "name": "GABINETE - Cuadro de Fuerza",
+          "cells": "E10:H13",
+          "photos": []
+        },
+        {
+          "name": "GABINETE - Consumo AC (Amperios)",
+          "cells": "I10:L13",
+          "photos": []
+        },
+        {
+          "name": "TABLERO AC Tapa/Sin Tapa/Mandil",
+          "cells": "M10:P13",
+          "photos": []
+        },
+        {
+          "name": "TABLERO AC - Breaker Gral / IPT",
+          "cells": "Q10:T13",
+          "photos": []
+        },
+        {
+          "name": "BBU / ATN - Panoramica Frontal",
+          "cells": "A15:D18",
+          "photos": []
+        },
+        {
+          "name": "PEINADO CABLES - Lado izquierdo",
+          "cells": "E15:H18",
+          "photos": []
+        }
+      ]
+    }
+  ]
+}
