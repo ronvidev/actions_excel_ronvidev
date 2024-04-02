@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<Widget> pages = [
-    const InsertImages(),
+    const InsertImagesPage(),
   ];
 
   @override
@@ -37,12 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final appProvider = context.read<AppProvider>();
 
     return Drawer(
-      width: 200.0,
+      width: 240.0,
       child: ListView.builder(
         itemCount: 1,
         itemBuilder: (context, index) {
           return ListTile(
-            title: const Text('Insertar imágenes'),
+            selected: index == appProvider.pageSelected,
+            title: Text(pageNames[index]),
             onTap: () {
               appProvider.setPageSelected(index);
               Navigator.pop(context);
