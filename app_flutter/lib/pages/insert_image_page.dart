@@ -58,16 +58,16 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
     String nameFile = nameController.text;
     if (nameFile.isEmpty) nameFile = "sin-título";
     final templateName = insertImageProvider.templateName ?? '';
-    final templatePath = insertImageProvider.templatesPath ?? '';
+    final templatesPath = insertImageProvider.templatesPath ?? '';
     final savePath = insertImageProvider.savePath ?? '';
 
     if (templateName.isNotEmpty &&
-        templatePath.isNotEmpty &&
+        templatesPath.isNotEmpty &&
         savePath.isNotEmpty) {
       final args = [
         "${Directory.current.path}/$imgToExcelPyPath",
-        "$docsFolder/$templateName.json",
-        "$templatePath/$templateName",
+        "$templatesPath/$templateName.json",
+        "$templatesPath/$templateName.xlsx",
         "$savePath/$nameFile.xlsx",
       ];
 

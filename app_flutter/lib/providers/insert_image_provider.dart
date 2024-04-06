@@ -159,7 +159,7 @@ class InsertImageProvider extends ChangeNotifier {
     final dataJson = data.toJson();
     final jsonString = const JsonEncoder.withIndent('  ').convert(dataJson);
     if (_templateName != null) {
-      await File("$docsFolder/$_templateName.json").writeAsString(jsonString);
+      await File("$templatesPath/$_templateName.json").writeAsString(jsonString);
     }
   }
 }
