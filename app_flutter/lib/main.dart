@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:app_flutter/providers/app_provider.dart';
 import 'package:app_flutter/providers/insert_image_provider.dart';
 import 'package:app_flutter/screens/home_screen.dart';
+import 'package:app_flutter/config/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final appProvider = context.watch<AppProvider>();
+
+    return MaterialApp(
+      theme: Themes.ligthTheme,
+      darkTheme: Themes.darkTheme,
+      themeMode: appProvider.themeMode,
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

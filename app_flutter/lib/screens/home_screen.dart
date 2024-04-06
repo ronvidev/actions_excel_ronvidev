@@ -1,5 +1,6 @@
-import 'package:app_flutter/pages/insert_image_page.dart';
+import 'package:app_flutter/pages/pages.dart';
 import 'package:app_flutter/providers/app_provider.dart';
+import 'package:app_flutter/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int pageSelected = 0;
-
-  List<String> pageNames = [
-    "Insertar imágenes",
-  ];
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Widget> pages = [
     const InsertImagesPage(),
@@ -27,29 +24,32 @@ class _HomeScreenState extends State<HomeScreen> {
     final pageSelected = appProvider.pageSelected;
 
     return Scaffold(
-      drawer: _drawer(),
-      appBar: AppBar(title: Text(pageNames[pageSelected])),
+      key: _scaffoldKey,
+      drawer: const MainDrawer(),
+      appBar: _appBar(context, pageSelected),
       body: pages[pageSelected],
     );
   }
 
-  Widget _drawer() {
-    final appProvider = context.read<AppProvider>();
+  AppBar _appBar(BuildContext context, int pageSelected) {
+    Widget leading = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+      child: ActionButton(
+        color: Colors.black.withOpacity(0.2),
+        child: const Icon(Icons.menu, color: Colors.white),
+        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+    );
 
-    return Drawer(
-      width: 240.0,
-      child: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return ListTile(
-            selected: index == appProvider.pageSelected,
-            title: Text(pageNames[index]),
-            onTap: () {
-              appProvider.setPageSelected(index);
-              Navigator.pop(context);
-            },
-          );
-        },
+    return AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      leading: leading,
+      title: Text(
+        pageNames[pageSelected],
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
       ),
     );
   }

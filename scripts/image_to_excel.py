@@ -5,7 +5,7 @@ import win32com.client as win32
 
 
 class ImageToExcel:
-    def __init__(self, archivo_excel, archivo_json, save_path) -> None:
+    def __init__(self, template_xlsx, archivo_json, save_path) -> None:
         with open(archivo_json, "r", encoding="utf-8") as file:
             self.data = json.load(file)
         self.save_path = save_path
@@ -13,7 +13,7 @@ class ImageToExcel:
 
         self.excel = win32.gencache.EnsureDispatch("Excel.Application")
         self.excel.Visible = False
-        self.wb = self.excel.Workbooks.Open(archivo_excel)
+        self.wb = self.excel.Workbooks.Open(template_xlsx)
 
     def obtener_columna_fila(self, celda):
         columna = "".join(letra for letra in celda if letra.isalpha())
@@ -86,11 +86,11 @@ class ImageToExcel:
 
 if __name__ == "__main__":
     archivo_json = sys.argv[1]
-    archivo_excel = sys.argv[2]
+    template_path = sys.argv[2]
     save_path = sys.argv[3]
     
     try:
-        imageToExcel = ImageToExcel(archivo_excel, archivo_json, save_path)
+        imageToExcel = ImageToExcel(template_path, archivo_json, save_path)
         imageToExcel.process()
     except:
         print(traceback.format_exc())

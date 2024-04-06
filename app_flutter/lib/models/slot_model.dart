@@ -1,6 +1,6 @@
 class Slot {
-  final String name;
-  final String cells;
+  String name;
+  String cells;
   final List<String> photos;
 
   Slot({
