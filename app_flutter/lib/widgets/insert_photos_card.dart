@@ -26,7 +26,7 @@ class InsertPhotosCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).hoverColor,
+      color: Theme.of(context).cardColor,
       clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(8.0),
       child: Column(children: [
@@ -61,6 +61,7 @@ class InsertPhotosCard extends StatelessWidget {
               bottom: 0.0,
               right: 0.0,
               child: ActionButton(
+                borderRadius: BorderRadius.zero,
                 child: const Icon(
                   Icons.close,
                   color: Colors.red,

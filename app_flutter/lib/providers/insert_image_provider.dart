@@ -94,6 +94,13 @@ class InsertImageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateSheet(int? index, Sheet sheet) async {
+    if (index != null) {
+      data.sheets[index] = sheet;
+      notifyListeners();
+    }
+  }
+
   Future<void> addSlot(Slot slot) async {
     data.sheets[_sheetSelected].slots.add(slot);
     await saveData();
@@ -114,6 +121,17 @@ class InsertImageProvider extends ChangeNotifier {
 
   Future<void> deletePhoto(int indexSlot, String photoPath) async {
     data.sheets[_sheetSelected].slots[indexSlot].photos.remove(photoPath);
+    await saveData();
+    notifyListeners();
+  }
+
+  Future<void> deleteAllPhotos() async {
+    data.sheets.asMap().forEach((indexSheet, _) {
+      data.sheets[indexSheet].slots.asMap().forEach((indexSlot, _) {
+        data.sheets[indexSheet].slots[indexSlot].photos.clear();
+      });
+    });
+
     await saveData();
     notifyListeners();
   }
@@ -143,7 +161,7 @@ class InsertImageProvider extends ChangeNotifier {
     if (_templatesPath == null) {
       final documentsDirectory = await getApplicationDocumentsDirectory();
       _templatesPath =
-          await createFolder("${documentsDirectory.path}/$docsFolder");
+          await createFolder("${documentsDirectory.path}/$templatesFolder");
     } else {
       _templatesPath = await createFolder(_templatesPath!);
     }
@@ -159,7 +177,8 @@ class InsertImageProvider extends ChangeNotifier {
     final dataJson = data.toJson();
     final jsonString = const JsonEncoder.withIndent('  ').convert(dataJson);
     if (_templateName != null) {
-      await File("$templatesPath/$_templateName.json").writeAsString(jsonString);
+      await File("$templatesPath/$_templateName.json")
+          .writeAsString(jsonString);
     }
   }
 }

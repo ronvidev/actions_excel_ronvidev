@@ -22,6 +22,7 @@ class _NewSlotDialogState extends State<NewSlotDialog> {
 
     return Center(
       child: Material(
+        color: Theme.of(context).dialogBackgroundColor,
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(8.0),
         child: SizedBox(
@@ -75,10 +76,11 @@ class _NewSlotDialogState extends State<NewSlotDialog> {
                       child: ActionButton(
                         child: const Text('Agregar'),
                         onPressed: () async {
-                          final insertImageProvider =
-                              context.read<InsertImageProvider>();
                           final name = nameController.text;
                           final cells = cellsController.text;
+                          if (name.isEmpty || cells.isEmpty) return;
+                          final insertImageProvider =
+                              context.read<InsertImageProvider>();
 
                           await insertImageProvider.addSlot(Slot(
                             name: name,

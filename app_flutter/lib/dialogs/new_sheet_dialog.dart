@@ -5,27 +5,37 @@ import 'package:autocells/widgets/input_text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NewSheetDialog extends StatefulWidget {
-  const NewSheetDialog({super.key});
+class SheetDialog extends StatefulWidget {
+  const SheetDialog({super.key, this.name, this.index});
+
+  final int? index;
+  final String? name;
 
   @override
-  State<NewSheetDialog> createState() => _NewSheetDialogState();
+  State<SheetDialog> createState() => _SheetDialogState();
 }
 
-class _NewSheetDialogState extends State<NewSheetDialog> {
+class _SheetDialogState extends State<SheetDialog> {
+  final nameController = TextEditingController();
+  bool isEdit = false;
   void _closeDialog() => Navigator.pop(context);
 
   @override
-  Widget build(BuildContext context) {
-    final nameController = TextEditingController();
+  void initState() {
+    nameController.text = widget.name ?? '';
+    isEdit = widget.name != null;
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Material(
+        color: Theme.of(context).dialogBackgroundColor,
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(8.0),
         child: SizedBox(
           width: 250.0,
-          // height: 300.0,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -33,9 +43,9 @@ class _NewSheetDialogState extends State<NewSheetDialog> {
                 width: double.infinity,
                 color: Theme.of(context).hoverColor,
                 padding: const EdgeInsets.all(8.0),
-                child: const Text(
-                  'Nueva hoja',
-                  style: TextStyle(fontSize: 18.0),
+                child: Text(
+                  isEdit ? 'Editando hoja' : 'Nueva hoja',
+                  style: const TextStyle(fontSize: 18.0),
                 ),
               ),
               Padding(
@@ -63,14 +73,21 @@ class _NewSheetDialogState extends State<NewSheetDialog> {
                     const SizedBox(width: 8.0),
                     Expanded(
                       child: ActionButton(
-                        child: const Text('Agregar'),
+                        child: Text(isEdit ? 'Editar' : 'Agregar'),
                         onPressed: () async {
-                          await context
-                              .read<InsertImageProvider>()
-                              .addSheet(Sheet(
-                                nameSheet: nameController.text,
-                                slots: [],
-                              ));
+                          final name = nameController.text;
+
+                          if (name.isEmpty) return;
+
+                          final sheet = Sheet(nameSheet: name, slots: []);
+
+                          isEdit
+                              ? await context
+                                  .read<InsertImageProvider>()
+                                  .updateSheet(widget.index, sheet)
+                              : await context
+                                  .read<InsertImageProvider>()
+                                  .addSheet(sheet);
 
                           _closeDialog();
                         },

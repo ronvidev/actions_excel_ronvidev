@@ -4,10 +4,13 @@ class Themes {
   static const useMaterial3 = true;
   static const primaryColorScheme = Colors.green;
 
-  static const lightPrimaryColor = Color.fromARGB(255, 239, 248, 239);
+  static const lightPrimaryColor = Color.fromARGB(255, 240, 255, 240);
+  static const lightBackroundColor = Color.fromARGB(255, 231, 248, 229);
   static const lightCanvasColor = Color.fromARGB(255, 247, 255, 246);
 
   static const darkPrimaryColor = Color.fromARGB(255, 48, 48, 48);
+  static const darkBackroundColor = Color.fromARGB(255, 22, 22, 22);
+  static const darkCanvasColor = Color.fromARGB(255, 42, 42, 42);
 
   static final pageTransitionsTheme = PageTransitionsTheme(builders: {
     TargetPlatform.windows: CustomPageTransitionsBuilder(),
@@ -15,7 +18,10 @@ class Themes {
 
   static ThemeData ligthTheme = ThemeData(
     useMaterial3: useMaterial3,
-    colorScheme: const ColorScheme.light(primary: primaryColorScheme),
+    colorScheme: const ColorScheme.light(
+      primary: primaryColorScheme,
+      background: lightBackroundColor,
+    ),
     primaryColor: lightPrimaryColor,
     canvasColor: lightCanvasColor,
     cardColor: const Color.fromARGB(255, 248, 255, 247),
@@ -28,9 +34,11 @@ class Themes {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: useMaterial3,
     brightness: Brightness.dark,
-    colorScheme: const ColorScheme.dark(primary: primaryColorScheme),
+    colorScheme: const ColorScheme.dark(
+        primary: primaryColorScheme, background: darkBackroundColor),
     primaryColor: darkPrimaryColor,
-    canvasColor: const Color.fromARGB(255, 31, 31, 31),
+    dialogBackgroundColor: darkBackroundColor,
+    canvasColor: darkCanvasColor,
     cardColor: const Color.fromARGB(255, 32, 32, 32),
     hintColor: const Color.fromARGB(255, 191, 222, 191),
     pageTransitionsTheme: pageTransitionsTheme,

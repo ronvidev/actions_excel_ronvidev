@@ -16,9 +16,11 @@ class ComboBox<T> extends StatefulWidget {
     super.key,
     this.controller,
     this.hintText,
-    required this.items,
     this.initialValue,
-    this.onSelected, this.width, this.suffix,
+    this.onSelected,
+    this.width,
+    this.suffix,
+    required this.items,
   });
 
   final double? width;
@@ -107,11 +109,9 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
-    final items = widget.items
-        .where((e) =>
-            e.label?.toLowerCase().contains(_controller.text.toLowerCase()) ??
-            false)
-        .toList();
+    final items = widget.items;
+    final indexFounded = items.indexWhere(
+        (e) => e.label?.toLowerCase() == _controller.text.toLowerCase());
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -137,19 +137,24 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
                         itemBuilder: (context, index) {
                           final itemValue = items[index].value;
                           final itemLabel = items[index].label;
-                          return InkWell(
-                            splashFactory: NoSplash.splashFactory,
-                            onTap: () {
-                              _controller.text = itemLabel ?? '';
-                              if (widget.onSelected != null) {
-                                widget.onSelected!(itemValue);
-                              }
-                              // valText = itemValue.toString();
-                              _closeOverlay();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(items[index].label ?? ''),
+                          return Material(
+                            color: index == indexFounded
+                                ? Theme.of(context).focusColor
+                                : Colors.transparent,
+                            child: InkWell(
+                              splashFactory: NoSplash.splashFactory,
+                              onTap: () {
+                                _controller.text = itemLabel ?? '';
+                                if (widget.onSelected != null) {
+                                  widget.onSelected!(itemValue);
+                                }
+                                // valText = itemValue.toString();
+                                _closeOverlay();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(items[index].label ?? ''),
+                              ),
                             ),
                           );
                         },

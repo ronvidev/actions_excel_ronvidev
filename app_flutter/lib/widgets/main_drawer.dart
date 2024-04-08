@@ -2,7 +2,9 @@ import 'package:autocells/config/constants.dart';
 import 'package:autocells/pages/pages.dart';
 import 'package:autocells/providers/providers.dart';
 import 'package:autocells/widgets/action_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -18,8 +20,10 @@ class _MainDrawerState extends State<MainDrawer> {
     context.read<AppProvider>().getVersionApp();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final appProvider = context.watch<AppProvider>();
     final versionApp = appProvider.versionApp;
 
@@ -33,13 +37,28 @@ class _MainDrawerState extends State<MainDrawer> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Container(
+                  height: 48.0,
+                  width: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Theme.of(context).primaryColor,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/ico_${isDark ? "dark" : "light"}.ico',
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 8.0,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'AutoExcel',
+                      nameApp,
                       style: TextStyle(
                         fontSize: 18.0,
                         height: 0.0,
@@ -57,6 +76,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     ),
                   ],
                 ),
+                Expanded(child: SizedBox()),
                 ActionButton(
                   child: const Icon(Icons.settings),
                   onPressed: () {

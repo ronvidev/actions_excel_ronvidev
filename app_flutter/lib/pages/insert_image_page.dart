@@ -175,6 +175,19 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
           ),
           const SizedBox(width: 8.0),
           _processButton(),
+          const SizedBox(width: 8.0),
+          ActionButton(
+            child: const Icon(Icons.cleaning_services_rounded),
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => ConfirmDialog(
+                  onConfirm: insertImageProvider.deleteAllPhotos,
+                ),
+              );
+            },
+          ),
           const Expanded(child: SizedBox()),
           ActionButton(
             onPressed: () => showDialog(
@@ -261,15 +274,28 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
                 onSecondaryTapDown: (details) {
                   showMenu(
                     context: context,
+                    color: Theme.of(context).canvasColor,
+                    popUpAnimationStyle:
+                        AnimationStyle(duration: Durations.medium3),
                     position: RelativeRect.fromLTRB(
                       details.globalPosition.dx,
-                      details.globalPosition.dy - 60.0,
+                      details.globalPosition.dy,
                       details.globalPosition.dx,
-                      details.globalPosition.dy - 60.0,
+                      details.globalPosition.dy,
                     ),
                     items: [
                       PopupMenuItem(
-                        value: 1,
+                        child: const Text('Editar'),
+                        onTap: () => showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => SheetDialog(
+                            index: index,
+                            name: sheets[index].nameSheet,
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem(
                         child: const Text('Eliminar'),
                         onTap: () =>
                             insertImageProvider.deleteSheet(sheets[index]),
@@ -325,7 +351,7 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
             onPressed: () => showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (context) => const NewSheetDialog(),
+              builder: (context) => const SheetDialog(),
             ),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(4.0),

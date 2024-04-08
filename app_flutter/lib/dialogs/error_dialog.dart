@@ -11,6 +11,7 @@ class ErrorDialog extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Material(
+          color: Theme.of(context).dialogBackgroundColor,
           clipBehavior: Clip.antiAlias,
           borderRadius: BorderRadius.circular(8.0),
           child: Container(
