@@ -1,7 +1,7 @@
-import 'package:app_flutter/models/slot_model.dart';
-import 'package:app_flutter/providers/insert_image_provider.dart';
-import 'package:app_flutter/widgets/action_button.dart';
-import 'package:app_flutter/widgets/input_text_box.dart';
+import 'package:autocells/models/slot_model.dart';
+import 'package:autocells/providers/insert_image_provider.dart';
+import 'package:autocells/widgets/action_button.dart';
+import 'package:autocells/widgets/input_text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

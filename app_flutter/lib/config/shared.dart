@@ -4,6 +4,7 @@ class Shared {
   static const String _savePathKey = 'SAVEPATHKEY';
   static const String _templatePathKey = 'TEMPLATEPATHKEY';
   static const String _templateNameKey = 'TEMPLATENAMEKEY';
+  static const String _lastThemeKey = 'LASTTHEMEKEY';
 
   static Future<bool> saveSavePath(String savePath) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
@@ -36,4 +37,16 @@ class Shared {
     final string = sf.getString(_templateNameKey);
     return string?.isNotEmpty ?? false ? string : null;
   }
+
+  static Future<bool> saveLastTheme(bool isDark) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setBool(_lastThemeKey, isDark);
+  }
+
+  static Future<bool?> getLastTheme() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getBool(_lastThemeKey);
+  }
+
+  
 }

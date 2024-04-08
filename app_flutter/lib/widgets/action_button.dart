@@ -7,10 +7,12 @@ class ActionButton extends StatelessWidget {
     this.color,
     this.child,
     this.borderRadius,
+    this.padding,
   });
 
   final Widget? child;
   final VoidCallback? onPressed;
+  final EdgeInsets? padding;
   final Color? color;
   final BorderRadiusGeometry? borderRadius;
 
@@ -19,11 +21,11 @@ class ActionButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStatePropertyAll(
-          color ?? Theme.of(context).hoverColor,
+          color ?? Theme.of(context).cardColor,
         ),
         elevation: const MaterialStatePropertyAll(0.0),
         splashFactory: NoSplash.splashFactory,
-        padding: const MaterialStatePropertyAll(EdgeInsets.zero),
+        padding: MaterialStatePropertyAll(padding ?? EdgeInsets.zero),
         minimumSize: const MaterialStatePropertyAll(Size(56.0, 40.0)),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(

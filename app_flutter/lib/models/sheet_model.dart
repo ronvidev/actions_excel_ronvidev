@@ -1,4 +1,4 @@
-import 'package:app_flutter/models/slot_model.dart';
+import 'package:autocells/models/slot_model.dart';
 
 class Sheet {
   final String nameSheet;

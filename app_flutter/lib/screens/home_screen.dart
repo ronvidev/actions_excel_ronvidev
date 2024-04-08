@@ -1,6 +1,6 @@
-import 'package:app_flutter/pages/pages.dart';
-import 'package:app_flutter/providers/app_provider.dart';
-import 'package:app_flutter/widgets/widgets.dart';
+import 'package:autocells/pages/pages.dart';
+import 'package:autocells/providers/app_provider.dart';
+import 'package:autocells/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,31 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const MainDrawer(),
-      appBar: _appBar(context, pageSelected),
-      body: pages[pageSelected],
-    );
-  }
-
-  AppBar _appBar(BuildContext context, int pageSelected) {
-    Widget leading = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-      child: ActionButton(
-        color: Colors.black.withOpacity(0.2),
-        child: const Icon(Icons.menu, color: Colors.white),
-        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-      ),
-    );
-
-    return AppBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      leading: leading,
-      title: Text(
-        pageNames[pageSelected],
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
+      appBar: mainBar(
+        context: context,
+        title: pageNames[pageSelected],
+        leading: ActionButton(
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          child: const Icon(Icons.menu),
         ),
       ),
+      body: pages[pageSelected],
     );
   }
 }

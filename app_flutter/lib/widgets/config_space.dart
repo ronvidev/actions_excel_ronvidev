@@ -15,7 +15,7 @@ class _ConfigSpaceState extends State<ConfigSpace> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      color: Theme.of(context).focusColor,
+      color: Theme.of(context).primaryColor,
       duration: Durations.medium2,
       curve: Curves.easeOutQuart,
       height: widget.isOpened ? widget.height : 0.0,

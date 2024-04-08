@@ -1,3 +1,3 @@
-# app_flutter
+# autocells
 
 A new Flutter project.

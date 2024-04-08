@@ -47,7 +47,7 @@ class _InputTextBoxState extends State<InputTextBox> {
           clipBehavior: Clip.antiAlias,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(8.0),
           ),
           // padding: const EdgeInsets.symmetric(horizontal: 8.0),

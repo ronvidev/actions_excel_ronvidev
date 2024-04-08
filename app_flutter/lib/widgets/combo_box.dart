@@ -1,4 +1,4 @@
-import 'package:app_flutter/widgets/widgets.dart';
+import 'package:autocells/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ComboBoxItem<T> {
@@ -124,7 +124,7 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(8.0),
             clipBehavior: Clip.antiAlias,
-            elevation: 4.0,
+            elevation: 1.0,
             child: MouseRegion(
               onEnter: (_) => setState(() => hoverOverlay = true),
               onExit: (_) => setState(() => hoverOverlay = false),

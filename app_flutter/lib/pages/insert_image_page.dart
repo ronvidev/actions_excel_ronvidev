@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:app_flutter/widgets/widgets.dart';
-import 'package:app_flutter/dialogs/dialogs.dart';
+import 'package:autocells/widgets/widgets.dart';
+import 'package:autocells/dialogs/dialogs.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
-import 'package:app_flutter/providers/providers.dart';
+import 'package:autocells/providers/providers.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:app_flutter/config/constants.dart';
+import 'package:autocells/config/constants.dart';
 
 class InsertImagesPage extends StatefulWidget {
   const InsertImagesPage({super.key});
@@ -137,7 +137,7 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
     final templates = insertImageProvider.templates;
 
     return Container(
-      color: Theme.of(context).primaryColor.withAlpha(20),
+      color: Theme.of(context).primaryColor.withOpacity(0.2),
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
@@ -263,9 +263,9 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
                     context: context,
                     position: RelativeRect.fromLTRB(
                       details.globalPosition.dx,
-                      details.globalPosition.dy - 60,
+                      details.globalPosition.dy - 60.0,
                       details.globalPosition.dx,
-                      details.globalPosition.dy - 60,
+                      details.globalPosition.dy - 60.0,
                     ),
                     items: [
                       PopupMenuItem(
@@ -279,7 +279,9 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
                 },
                 child: Material(
                   clipBehavior: Clip.antiAlias,
-                  color: isSelected ? Theme.of(context).focusColor : null,
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).cardColor,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(4.0),
                   ),
@@ -306,7 +308,7 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
                               child: Container(
                                 height: 2.0,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                             ),
@@ -319,9 +321,10 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
             }),
           ),
           ActionButton(
+            color: Theme.of(context).cardColor.withOpacity(0.3),
             onPressed: () => showDialog(
               context: context,
-              barrierDismissible :false,
+              barrierDismissible: false,
               builder: (context) => const NewSheetDialog(),
             ),
             borderRadius: const BorderRadius.vertical(
@@ -336,17 +339,20 @@ class _InsertImagesPageState extends State<InsertImagesPage> {
 
   Widget _processButton() {
     return ActionButton(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.primary,
       onPressed: _inProcess ? null : _onProcess,
       child: _inProcess
-          ? const SizedBox.square(
+          ? SizedBox.square(
               dimension: 15.0,
               child: CircularProgressIndicator(
                 strokeWidth: 3.0,
-                color: Colors.white,
+                color: Theme.of(context).primaryColor,
               ),
             )
-          : const Icon(Icons.play_arrow, color: Colors.white),
+          : Icon(
+              Icons.play_arrow,
+              color: Theme.of(context).primaryColor,
+            ),
     );
   }
 }

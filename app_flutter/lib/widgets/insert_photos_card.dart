@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:app_flutter/models/slot_model.dart';
-import 'package:app_flutter/providers/insert_image_provider.dart';
+import 'package:autocells/models/slot_model.dart';
+import 'package:autocells/providers/insert_image_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:app_flutter/widgets/action_button.dart';
-import 'package:app_flutter/widgets/text_editable.dart';
+import 'package:autocells/widgets/action_button.dart';
+import 'package:autocells/widgets/text_editable.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:provider/provider.dart';
 
@@ -61,8 +61,12 @@ class InsertPhotosCard extends StatelessWidget {
               bottom: 0.0,
               right: 0.0,
               child: ActionButton(
-                child: const Icon(Icons.close, color: Colors.red,),
-                onPressed: () => context.read<InsertImageProvider>().deleteSlot(slot),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.red,
+                ),
+                onPressed: () =>
+                    context.read<InsertImageProvider>().deleteSlot(slot),
               ),
             )
           ],
@@ -109,18 +113,9 @@ class InsertPhotosCard extends StatelessWidget {
                 ),
                 child: Image.file(File(photos[indexPhoto]), isAntiAlias: true),
               ),
-              Column(
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  ActionButton(
-                    color: Colors.transparent,
-                    onPressed: onDeletePhoto != null
-                        ? () => onDeletePhoto!(photos[indexPhoto])
-                        : null,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.red.withOpacity(0.7),
-                    ),
-                  ),
                   ActionButton(
                     color: Colors.transparent,
                     onPressed: () => showDialog(
@@ -151,7 +146,17 @@ class InsertPhotosCard extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.open_in_full,
-                      color: Theme.of(context).hintColor.withOpacity(0.3),
+                      color: Theme.of(context).dividerColor.withOpacity(0.3),
+                    ),
+                  ),
+                  ActionButton(
+                    color: Colors.transparent,
+                    onPressed: onDeletePhoto != null
+                        ? () => onDeletePhoto!(photos[indexPhoto])
+                        : null,
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.red.withOpacity(0.7),
                     ),
                   ),
                 ],

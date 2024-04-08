@@ -7,3 +7,4 @@ export 'main_drawer.dart';
 export 'config_space.dart';
 export 'text_picker_box.dart';
 export 'combo_box.dart';
+export 'main_bar.dart';
