@@ -1,10 +1,12 @@
 export 'input_text_box.dart';
-export 'action_button.dart';
 export 'text_editable.dart';
 export 'horizontal_view.dart';
-export 'insert_photos_card.dart';
+export 'slot_card.dart';
 export 'main_drawer.dart';
-export 'config_space.dart';
 export 'text_picker_box.dart';
 export 'combo_box.dart';
 export 'main_bar.dart';
+export 'photo_card.dart';
+export 'process_button.dart';
+export 'cell_tile.dart';
+export 'main_scaffold.dart';

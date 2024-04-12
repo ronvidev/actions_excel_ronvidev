@@ -83,21 +83,24 @@ class _ComboBoxState<T> extends State<ComboBox<T>> {
             child: Row(
               children: [
                 if (widget.suffix != null) widget.suffix!,
-                ActionButton(
-                  borderRadius: BorderRadius.zero,
-                  child: Icon(overlayOpened
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded),
-                  onPressed: () {
-                    !overlayOpened ? _showOverlay() : _closeOverlay();
-                    // print(templatesPath);
-                  },
-                ),
+                _openButton(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  IconButton _openButton() {
+    return IconButton(
+      style: const ButtonStyle(
+        shape: MaterialStatePropertyAll(LinearBorder.none),
+      ),
+      icon: Icon(overlayOpened
+          ? Icons.keyboard_arrow_up_rounded
+          : Icons.keyboard_arrow_down_rounded),
+      onPressed: !overlayOpened ? _showOverlay : _closeOverlay,
     );
   }
 

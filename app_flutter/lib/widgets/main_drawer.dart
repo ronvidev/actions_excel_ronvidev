@@ -1,10 +1,7 @@
 import 'package:autocells/config/constants.dart';
 import 'package:autocells/pages/pages.dart';
 import 'package:autocells/providers/providers.dart';
-import 'package:autocells/widgets/action_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -29,7 +26,8 @@ class _MainDrawerState extends State<MainDrawer> {
 
     return Drawer(
       width: 240.0,
-      backgroundColor: Theme.of(context).canvasColor,
+      elevation: 0.0,
+      backgroundColor: Theme.of(context).primaryColor,
       shape: const LinearBorder(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,9 +74,9 @@ class _MainDrawerState extends State<MainDrawer> {
                     ),
                   ],
                 ),
-                Expanded(child: SizedBox()),
-                ActionButton(
-                  child: const Icon(Icons.settings),
+                const Expanded(child: SizedBox()),
+                IconButton(
+                  icon: const Icon(Icons.settings),
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, kSettingsScreen);
@@ -93,8 +91,8 @@ class _MainDrawerState extends State<MainDrawer> {
               itemCount: pageNames.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  selectedColor: Theme.of(context).dividerColor,
-                  selectedTileColor: Theme.of(context).splashColor,
+                  // selectedColor: Theme.of(context).dividerColor,
+                  selectedTileColor: Theme.of(context).focusColor,
                   splashColor: Colors.transparent,
                   selected: index == appProvider.pageSelected,
                   title: Text(pageNames[index]),

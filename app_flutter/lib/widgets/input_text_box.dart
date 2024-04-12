@@ -10,6 +10,7 @@ class InputTextBox extends StatefulWidget {
     this.hintText,
     this.suffix,
     this.focusNode,
+    this.onSubmitted,
   });
 
   final String? title;
@@ -17,6 +18,7 @@ class InputTextBox extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String value)? onChanged;
   final void Function(PointerDownEvent)? onTapOutside;
+  final void Function(String value)? onSubmitted;
   final Widget? suffix;
   final FocusNode? focusNode;
 
@@ -41,6 +43,7 @@ class _InputTextBoxState extends State<InputTextBox> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.title != null) _placeholder(),
         Container(
@@ -49,8 +52,11 @@ class _InputTextBoxState extends State<InputTextBox> {
           decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: Theme.of(context).hintColor.withOpacity(0.2),
+              width: 0.3,
+            ),
           ),
-          // padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
               Expanded(
@@ -59,6 +65,8 @@ class _InputTextBoxState extends State<InputTextBox> {
                   focusNode: widget.focusNode,
                   onChanged: widget.onChanged,
                   onTapOutside: widget.onTapOutside,
+                  onSubmitted: (val) =>
+                      val.isNotEmpty ? widget.onSubmitted?.call(val) : null,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     isCollapsed: true,

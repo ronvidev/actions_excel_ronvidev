@@ -20,8 +20,10 @@ class _TextPickerBoxState extends State<TextPickerBox> {
       controller: widget.controller,
       title: widget.title,
       onChanged: widget.onChanged,
-      suffix: ActionButton(
-        borderRadius: BorderRadius.zero,
+      suffix: IconButton(
+        style: const ButtonStyle(
+          shape: MaterialStatePropertyAll(LinearBorder.none),
+        ),
         onPressed: () async {
           String? result = await FilePicker.platform.getDirectoryPath(
             lockParentWindow: true,
@@ -32,7 +34,7 @@ class _TextPickerBoxState extends State<TextPickerBox> {
             setState(() => widget.controller?.text = result);
           }
         },
-        child: const Icon(Icons.folder_rounded),
+        icon: const Icon(Icons.folder_rounded),
       ),
     );
   }

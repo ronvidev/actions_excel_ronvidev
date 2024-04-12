@@ -26,7 +26,7 @@ class ErrorDialog extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(8.0),
-                  color: Theme.of(context).hoverColor,
+                  color: Theme.of(context).primaryColor,
                   child: const Text(
                     'Error',
                     style: TextStyle(
@@ -49,7 +49,7 @@ class ErrorDialog extends StatelessWidget {
                 ),
                 Container(
                   height: 36.0,
-                  color: Theme.of(context).hoverColor,
+                  color: Theme.of(context).cardColor,
                   child: InkWell(
                     onTap: () => Navigator.pop(context),
                     splashFactory: NoSplash.splashFactory,

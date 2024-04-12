@@ -12,10 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   List<Widget> pages = [
-    const InsertImagesPage(),
+    const ExcelTemplatePage(),
   ];
 
   @override
@@ -23,18 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final appProvider = context.watch<AppProvider>();
     final pageSelected = appProvider.pageSelected;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: const MainDrawer(),
-      appBar: mainBar(
-        context: context,
-        title: pageNames[pageSelected],
-        leading: ActionButton(
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          child: const Icon(Icons.menu),
-        ),
-      ),
-      body: pages[pageSelected],
-    );
+    return MainScaffold(child: pages[pageSelected]);
   }
 }

@@ -15,7 +15,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _updateApp() {
     context.read<AppProvider>().updateApp();
-
   }
 
   @override
@@ -34,74 +33,72 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final appVersion = appProvider.versionApp;
     final newVersionApp = appProvider.newVersionApp;
 
-    return Scaffold(
-      appBar: mainBar(
-          context: context,
-          title: 'Configuración',
-          leading: ActionButton(
-            child: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => Navigator.pop(context),
-          )),
-      body: _isReady
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isUpdated
-                                ? 'Aplicación actualizada'
-                                : 'Actualización disponible',
-                            style: const TextStyle(fontSize: 20.0),
-                          ),
-                          const SizedBox(width: 8.0),
-                          if (!isUpdated)
+    return MainScaffold(
+      child: Column(
+        children: [
+          MainBar(
+            title: 'Configuración',
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          Expanded(
+            child: _isReady
+                ? Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Versión actual: $appVersion'),
-                                Text('Versión nueva: $newVersionApp'),
+                                Text(
+                                  isUpdated
+                                      ? 'Aplicación actualizada'
+                                      : 'Actualización disponible',
+                                  style: const TextStyle(fontSize: 20.0),
+                                ),
+                                const SizedBox(width: 8.0),
+                                if (!isUpdated)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Versión actual: $appVersion'),
+                                      Text('Versión nueva: $newVersionApp'),
+                                    ],
+                                  ),
                               ],
                             ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          if (isUpdating)
-                            const SizedBox.square(
-                              dimension: 20.0,
-                              child: CircularProgressIndicator(),
-                            ),
-                          const SizedBox(width: 8.0),
-                          ActionButton(
-                            padding: const EdgeInsets.all(16.0),
-                            onPressed:
-                                isUpdated || isUpdating ? null : _updateApp,
-                            child: const Text('Actualizar'),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          : const Center(child: CircularProgressIndicator()),
+                            Row(
+                              children: [
+                                if (isUpdating)
+                                  const SizedBox.square(
+                                    dimension: 20.0,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                const SizedBox(width: 8.0),
+                                ElevatedButton(
+                                  onPressed: isUpdated || isUpdating
+                                      ? null
+                                      : _updateApp,
+                                  child: const Text('Actualizar'),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
+        ],
+      ),
     );
   }
-
-  // void _showDialog() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         //
-  //         return const UpdateDialog();
-  //       });
-  // }
 }

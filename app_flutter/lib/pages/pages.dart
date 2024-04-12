@@ -1,6 +1,6 @@
-export 'insert_image_page.dart';
+export 'excel_template_page.dart';
 
 List<String> pageNames = [
-  "Insertar imágenes",
+  "Excel desde plantilla",
 ];
 

@@ -1,15 +1,14 @@
 import 'package:autocells/models/sheet_model.dart';
-import 'package:autocells/providers/insert_image_provider.dart';
-import 'package:autocells/widgets/action_button.dart';
+import 'package:autocells/providers/excel_template_provider.dart';
 import 'package:autocells/widgets/input_text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SheetDialog extends StatefulWidget {
-  const SheetDialog({super.key, this.name, this.index});
+  const SheetDialog({super.key, this.sheet, this.index});
 
   final int? index;
-  final String? name;
+  final Sheet? sheet;
 
   @override
   State<SheetDialog> createState() => _SheetDialogState();
@@ -18,12 +17,27 @@ class SheetDialog extends StatefulWidget {
 class _SheetDialogState extends State<SheetDialog> {
   final nameController = TextEditingController();
   bool isEdit = false;
+
+  Future<void> _addSheet(String name) async {
+    widget.sheet?.nameSheet = name;
+
+    final sheet = Sheet(nameSheet: name, imageSlots: [], textSlots: []);
+
+    isEdit
+        ? await context
+            .read<ExcelTemplateProvider>()
+            .updateSheet(widget.index, widget.sheet)
+        : await context.read<ExcelTemplateProvider>().addSheet(sheet);
+
+    _closeDialog();
+  }
+
   void _closeDialog() => Navigator.pop(context);
 
   @override
   void initState() {
-    nameController.text = widget.name ?? '';
-    isEdit = widget.name != null;
+    nameController.text = widget.sheet?.nameSheet ?? '';
+    isEdit = widget.sheet != null;
     super.initState();
   }
 
@@ -41,7 +55,7 @@ class _SheetDialogState extends State<SheetDialog> {
             children: [
               Container(
                 width: double.infinity,
-                color: Theme.of(context).hoverColor,
+                color: Theme.of(context).primaryColor,
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   isEdit ? 'Editando hoja' : 'Nueva hoja',
@@ -53,44 +67,33 @@ class _SheetDialogState extends State<SheetDialog> {
                 child: InputTextBox(
                   title: 'Nombre',
                   controller: nameController,
+                  onSubmitted: (value) => _addSheet(value),
                 ),
               ),
               Container(
                 width: double.infinity,
-                color: Theme.of(context).hoverColor,
+                color: Theme.of(context).primaryColor,
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: ActionButton(
+                      child: ElevatedButton(
+                        onPressed: _closeDialog,
                         child: const Text(
                           'Cancelar',
                           style: TextStyle(color: Colors.red),
                         ),
-                        onPressed: () => _closeDialog(),
                       ),
                     ),
                     const SizedBox(width: 8.0),
                     Expanded(
-                      child: ActionButton(
-                        child: Text(isEdit ? 'Editar' : 'Agregar'),
+                      child: ElevatedButton(
                         onPressed: () async {
                           final name = nameController.text;
-
                           if (name.isEmpty) return;
-
-                          final sheet = Sheet(nameSheet: name, slots: []);
-
-                          isEdit
-                              ? await context
-                                  .read<InsertImageProvider>()
-                                  .updateSheet(widget.index, sheet)
-                              : await context
-                                  .read<InsertImageProvider>()
-                                  .addSheet(sheet);
-
-                          _closeDialog();
+                          _addSheet(name);
                         },
+                        child: Text(isEdit ? 'Editar' : 'Agregar'),
                       ),
                     ),
                   ],

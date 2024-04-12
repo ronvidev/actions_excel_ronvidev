@@ -1,10 +1,10 @@
-import 'package:autocells/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog({super.key, this.onConfirm});
+  const ConfirmDialog({super.key, this.onConfirm, this.buttonText});
 
   final VoidCallback? onConfirm;
+  final String? buttonText;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ConfirmDialog extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                color: Theme.of(context).hoverColor,
+                color: Theme.of(context).primaryColor,
                 padding: const EdgeInsets.all(8.0),
                 child:const Text(
                   '¿Está seguro?',
@@ -31,27 +31,27 @@ class ConfirmDialog extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                color: Theme.of(context).hoverColor,
+                color: Theme.of(context).canvasColor,
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: ActionButton(
+                      child: ElevatedButton(
+                        onPressed: () => closeDialog(),
                         child: const Text(
                           'Cancelar',
                           style: TextStyle(color: Colors.red),
                         ),
-                        onPressed: () => closeDialog(),
                       ),
                     ),
                     const SizedBox(width: 8.0),
                     Expanded(
-                      child: ActionButton(
-                        child: const Text('Limpiar'),
+                      child: ElevatedButton(
                         onPressed: () async {
                           onConfirm?.call();
                           closeDialog();
                         },
+                        child: Text(buttonText ?? 'Confirmar'),
                       ),
                     ),
                   ],

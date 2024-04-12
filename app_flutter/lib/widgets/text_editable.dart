@@ -6,14 +6,20 @@ class TextEditable extends StatefulWidget {
     this.maxLines = 1,
     this.initialValue,
     this.decoration,
+    this.alignment = Alignment.centerLeft,
     this.textAlign = TextAlign.start,
     this.onChanged,
+    this.controller,
+    this.value,
   });
 
   final int? maxLines;
+  final Alignment alignment;
   final TextAlign textAlign;
+  final String? value;
   final String? initialValue;
   final BoxDecoration? decoration;
+  final TextEditingController? controller;
   final void Function(String value)? onChanged;
 
   @override
@@ -21,23 +27,34 @@ class TextEditable extends StatefulWidget {
 }
 
 class _TextEditableState extends State<TextEditable> {
+  late TextEditingController controller;
   final focusNode = FocusNode();
-  final controller = TextEditingController();
   bool isEditing = false;
 
   final textStyle = const TextStyle(fontSize: 16.0);
 
+  void _onSubmitted() async {
+    setState(() {
+      isEditing = false;
+      controller.selection = const TextSelection.collapsed(offset: 0);
+    });
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   void initState() {
+    controller = widget.controller ?? TextEditingController();
     if (widget.initialValue != null) controller.text = widget.initialValue!;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.value != null) controller.text = widget.value!;
     return Container(
+      alignment: widget.alignment,
       decoration: isEditing
-          ? BoxDecoration(color: Theme.of(context).canvasColor.withOpacity(0.5))
+          ? BoxDecoration(color: Theme.of(context).canvasColor)
           : null,
       child: isEditing
           ? TextField(
@@ -45,18 +62,18 @@ class _TextEditableState extends State<TextEditable> {
               focusNode: focusNode,
               controller: controller,
               style: textStyle,
+              onChanged: widget.onChanged,
+              textAlign: widget.textAlign,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 isCollapsed: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 6.0,
+                ),
               ),
-              onTapOutside: (event) => setState(() {
-                isEditing = false;
-                FocusScope.of(context).unfocus();
-                controller.selection = const TextSelection.collapsed(offset: 0);
-              }),
-              onChanged: widget.onChanged,
+              onTapOutside: (event) => _onSubmitted(),
+              onSubmitted: (value) => _onSubmitted(),
             )
           : GestureDetector(
               onDoubleTap: () {
@@ -68,10 +85,13 @@ class _TextEditableState extends State<TextEditable> {
                 );
               },
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                alignment: widget.alignment,
                 color: Colors.transparent,
-                // width: double.infinity,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6.0,
+                  vertical: 3.0,
+                ),
                 child: Text(controller.text, style: textStyle),
               ),
             ),

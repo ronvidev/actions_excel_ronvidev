@@ -2,16 +2,14 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:autocells/config/constants.dart';
 import 'package:autocells/config/helpers.dart';
-import 'package:autocells/models/data_model.dart';
-import 'package:autocells/models/sheet_model.dart';
-import 'package:autocells/models/slot_model.dart';
+import 'package:autocells/models/models.dart';
 import 'package:autocells/config/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-class InsertImageProvider extends ChangeNotifier {
-  final pageController = PageController();
+class ExcelTemplateProvider extends ChangeNotifier {
+  final pageSheetController = PageController();
   Data data = Data(sheets: []);
   String? nameFile;
   List<String> _templates = [];
@@ -20,8 +18,10 @@ class InsertImageProvider extends ChangeNotifier {
   String? _templateName;
 
   int _sheetSelected = 0;
+  int _typeSelected = 0;
 
   int get sheetSelected => _sheetSelected;
+  int get typeSelected => _typeSelected;
   String? get templatesPath => _templatesPath;
   String? get savePath => _savePath;
   String? get templateName => _templateName;
@@ -66,19 +66,30 @@ class InsertImageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setNameSlot(int indexSlot, String nameSlot) async {
-    data.sheets[_sheetSelected].slots[indexSlot].name = nameSlot;
+  Future<void> updateNameSlot(int indexSlot, String nameSlot) async {
+    data.sheets[_sheetSelected].imageSlots[indexSlot].name = nameSlot;
     await saveData();
   }
 
-  Future<void> setCells(int indexSlot, String cells) async {
-    data.sheets[_sheetSelected].slots[indexSlot].cells = cells;
+  Future<void> updateTextCell(int index, TextSlot textCell) async {
+    data.sheets[_sheetSelected].textSlots[index] = textCell;
+    await saveData();
+    notifyListeners();
+  }
+
+  Future<void> updateSlotCells(int indexSlot, String cells) async {
+    data.sheets[_sheetSelected].imageSlots[indexSlot].cells = cells;
     await saveData();
   }
 
   void setSheetSelected(int indexSheet) {
     _sheetSelected = indexSheet;
-    pageController.jumpToPage(indexSheet);
+    pageSheetController.jumpToPage(indexSheet);
+    notifyListeners();
+  }
+
+  void setTypeSelected(int index) {
+    _typeSelected = index;
     notifyListeners();
   }
 
@@ -94,41 +105,57 @@ class InsertImageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateSheet(int? index, Sheet sheet) async {
-    if (index != null) {
+  Future<void> updateSheet(int? index, Sheet? sheet) async {
+    if (index != null && sheet != null) {
       data.sheets[index] = sheet;
+      await saveData();
       notifyListeners();
     }
   }
 
-  Future<void> addSlot(Slot slot) async {
-    data.sheets[_sheetSelected].slots.add(slot);
+  Future<void> addTextCell(TextSlot textCell) async {
+    data.sheets[_sheetSelected].textSlots.add(textCell);
     await saveData();
     notifyListeners();
   }
 
-  Future<void> deleteSlot(Slot slot) async {
-    data.sheets[_sheetSelected].slots.remove(slot);
+  Future<void> addSlot(ImageSlot slot) async {
+    data.sheets[_sheetSelected].imageSlots.add(slot);
+    await saveData();
+    notifyListeners();
+  }
+
+  Future<void> deleteSlot(ImageSlot slot) async {
+    data.sheets[_sheetSelected].imageSlots.remove(slot);
+    await saveData();
+    notifyListeners();
+  }
+
+  Future<void> deleteTextCell(TextSlot textCell) async {
+    data.sheets[_sheetSelected].textSlots.remove(textCell);
     await saveData();
     notifyListeners();
   }
 
   Future<void> insertPhoto(int indexSlot, String photoPath) async {
-    data.sheets[_sheetSelected].slots[indexSlot].photos.add(photoPath);
+    data.sheets[_sheetSelected].imageSlots[indexSlot].photos.add(photoPath);
     await saveData();
     notifyListeners();
   }
 
   Future<void> deletePhoto(int indexSlot, String photoPath) async {
-    data.sheets[_sheetSelected].slots[indexSlot].photos.remove(photoPath);
+    data.sheets[_sheetSelected].imageSlots[indexSlot].photos.remove(photoPath);
     await saveData();
     notifyListeners();
   }
 
-  Future<void> deleteAllPhotos() async {
+  Future<void> deleteAll() async {
     data.sheets.asMap().forEach((indexSheet, _) {
-      data.sheets[indexSheet].slots.asMap().forEach((indexSlot, _) {
-        data.sheets[indexSheet].slots[indexSlot].photos.clear();
+      data.sheets[indexSheet].imageSlots.asMap().forEach((index, _) {
+        data.sheets[indexSheet].imageSlots[index].photos.clear();
+      });
+      data.sheets[indexSheet].textSlots.asMap().forEach((index, _) {
+        data.sheets[indexSheet].textSlots[index].value = '';
       });
     });
 

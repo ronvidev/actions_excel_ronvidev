@@ -1,15 +1,15 @@
-class Slot {
+class ImageSlot {
   String name;
   String cells;
   final List<String> photos;
 
-  Slot({
+  ImageSlot({
     required this.name,
     required this.cells,
     required this.photos,
   });
 
-  factory Slot.fromJson(Map<String, dynamic> json) => Slot(
+  factory ImageSlot.fromJson(Map<String, dynamic> json) => ImageSlot(
         name: json['name'] ?? '',
         cells: json['cells'] ?? '',
         photos: List<String>.from(json['photos']),

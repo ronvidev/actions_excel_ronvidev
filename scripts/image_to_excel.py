@@ -20,64 +20,67 @@ class ImageToExcel:
         fila = "".join(digito for digito in celda if digito.isdigit())
         return (columna, int(fila))
 
-    def put_image(self, foto_path, coords):
-        rango = self.ws.Range(coords)
-        rango.ClearContents()
+    def put_image(self, foto_path, px, py, width, height):
         self.ws.Shapes.AddPicture(
             foto_path,
             False,
             True,
-            rango.Left,
-            rango.Top,
-            rango.Width,
-            rango.Height,
+            px,
+            py,
+            width,
+            height,
         )
 
     def process(self):
         for sheet in self.sheets:
             self.ws = self.wb.Sheets(sheet["nameSheet"])
-
-            for image in sheet["slots"]:
+            
+            # Colocar textos
+            for text in sheet["textSlots"]:
+                cell = text["cell"]
+                value = text["value"]
+                self.ws.Range(cell).Value = value
+            
+            # Colocar imágenes
+            for image in sheet["imageSlots"]:
                 photos = image["photos"]
                 cells = image["cells"]
-                cell_init, cell_end = cells.split(":")
-
-                col_init, row_init = self.obtener_columna_fila(cell_init)
-                col_end, row_end = self.obtener_columna_fila(cell_end)
-                cols = ord(col_end) - ord(col_init) + 1
-                rows = row_end - row_init + 1
+                range_slot = self.ws.Range(cells)
+                
+                # Eliminar contenido de las celdas si hay fotos
+                if len(photos) > 0:
+                    range_slot.ClearContents()
+                    
+                px = range_slot.Left
+                py = range_slot.Top
+                width_range = range_slot.Width
+                height_range = range_slot.Height
 
                 if len(photos) == 1:
-                    self.put_image(photos[0], cells)
+                    self.put_image(photos[0], px, py, width_range, height_range)
 
                 elif len(photos) == 2:
+                    width = width_range * (1 / 2)
+                    height = height_range * (3 / 4)
+
                     for photo in photos:
-                        col_init, row_init = self.obtener_columna_fila(cell_init)
+                        self.put_image(photo, px, py, width, height)
 
-                        cell_end = (
-                            f"{chr(ord(col_init) + cols - 3)}{row_init + rows - 2}"
-                        )
-                        cells = f"{cell_init}:{cell_end}"
+                        px = px + width
+                        py = py + height_range - height
 
-                        self.put_image(photo, cells)
+                elif 3 <= len(photos) <= 4:
+                    width = width_range * (1 / 2)
+                    height = height_range * (1 / 2)
 
-                        cell_init = f"{chr(ord(col_init) + 2)}{row_init + 1}"
+                    for photo in photos:
+                        self.put_image(photo, px, py, width, height)
 
-                elif len(photos) == 3:
-                    for i, photo in enumerate(photos):
-                        col_init, row_init = self.obtener_columna_fila(cell_init)
+                        px = px + width
 
-                        cell_end = (
-                            f"{chr(ord(col_init) + cols - 3)}{row_init + rows - 3}"
-                        )
-                        cells = f"{cell_init}:{cell_end}"
-
-                        self.put_image(photo, cells)
-
-                        if i == 0:
-                            cell_init = f"{chr(ord(col_init) + 2)}{row_init}"
-                        else:
-                            cell_init = f"{chr(ord(col_init) - 2)}{row_init + 2}"
+                        if px >= range_slot.Left + width_range:
+                            px = range_slot.Left
+                            py = py + height_range - height
 
         self.wb.SaveAs(self.save_path)
         self.wb.Close()
@@ -88,7 +91,7 @@ if __name__ == "__main__":
     archivo_json = sys.argv[1]
     template_path = sys.argv[2]
     save_path = sys.argv[3]
-    
+
     try:
         imageToExcel = ImageToExcel(template_path, archivo_json, save_path)
         imageToExcel.process()

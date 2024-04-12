@@ -1,21 +1,29 @@
-import 'package:autocells/models/slot_model.dart';
+import 'package:autocells/models/models.dart';
 
 class Sheet {
-  final String nameSheet;
-  final List<Slot> slots;
+  String nameSheet;
+  final List<TextSlot> textSlots;
+  final List<ImageSlot> imageSlots;
 
   Sheet({
     required this.nameSheet,
-    required this.slots,
+    required this.textSlots,
+    required this.imageSlots,
   });
 
   factory Sheet.fromJson(Map<String, dynamic> json) => Sheet(
         nameSheet: json['nameSheet'] ?? '',
-        slots: List.from(json['slots']).map((e) => Slot.fromJson(e)).toList(),
+        textSlots: List.from(
+          List.from(json['textSlots'] ?? []).map((e) => TextSlot.fromJson(e)),
+        ),
+        imageSlots: List.from(
+          List.from(json['imageSlots'] ?? []).map((e) => ImageSlot.fromJson(e)),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
         'nameSheet': nameSheet,
-        'slots': slots.map((e) => e.toJson()).toList(),
+        'textSlots': textSlots.map((e) => e.toJson()).toList(),
+        'imageSlots': imageSlots.map((e) => e.toJson()).toList(),
       };
 }
