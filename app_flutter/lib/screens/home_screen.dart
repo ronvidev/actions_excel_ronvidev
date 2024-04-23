@@ -1,6 +1,5 @@
 import 'package:autocells/pages/pages.dart';
 import 'package:autocells/providers/app_provider.dart';
-import 'package:autocells/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final appProvider = context.watch<AppProvider>();
     final pageSelected = appProvider.pageSelected;
 
-    return MainScaffold(child: pages[pageSelected]);
+    return pages[pageSelected];
   }
 }

@@ -25,7 +25,7 @@ class _ExcelTemplatePageState extends State<ExcelTemplatePage> {
   bool _isReady = false;
   bool _inProcess = false;
 
-  void _pickerTemplatePath(ExcelTemplateProvider excelTemplateProvider) async {
+  Future<void> _pickerTemplatePath(ExcelTemplateProvider excelTemplateProvider) async {
     final result = await FilePicker.platform.pickFiles(
       lockParentWindow: true,
       allowedExtensions: ["xlsx"],
@@ -51,15 +51,16 @@ class _ExcelTemplatePageState extends State<ExcelTemplatePage> {
     setState(() => _isReady = true);
   }
 
-  void _onProcess() async {
+  Future<void> _onProcess() async {
     setState(() => _inProcess = true);
     final excelTemplateProvider = context.read<ExcelTemplateProvider>();
 
-    String nameFile = nameController.text;
-    if (nameFile.isEmpty) nameFile = "sin-título";
     final templateName = excelTemplateProvider.templateName ?? '';
     final templatesPath = excelTemplateProvider.templatesPath ?? '';
     final savePath = excelTemplateProvider.savePath ?? '';
+
+    String nameFile = nameController.text;
+    if (nameFile.isEmpty) nameFile = "sin-título";
 
     if (templateName.isNotEmpty &&
         templatesPath.isNotEmpty &&
@@ -101,12 +102,24 @@ class _ExcelTemplatePageState extends State<ExcelTemplatePage> {
             ),
             child: _configSpace(),
           ),
-          if (_isReady) _actionBar(),
           Expanded(
-            child: _isReady
-                ? _sheetView()
-                : const Center(child: CircularProgressIndicator()),
-          ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      if (_isReady) _actionBar(),
+                      Expanded(
+                        child: _isReady
+                            ? _sheetView()
+                            : const Center(child: CircularProgressIndicator()),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -278,8 +291,8 @@ class _ExcelTemplatePageState extends State<ExcelTemplatePage> {
       itemCount: slots.length,
       itemBuilder: (contet, index) => SlotCard(
         slot: slots[index],
-        onInsertPhoto: (photoPath) =>
-            excelTemplateProvider.insertPhoto(index, photoPath),
+        onInsertPhoto: (photoPath) async =>
+            await excelTemplateProvider.insertPhoto(index, photoPath),
         onDeletePhoto: (photoPath) =>
             excelTemplateProvider.deletePhoto(index, photoPath),
         onChangedNameSlot: (value) =>
@@ -366,106 +379,50 @@ class _ExcelTemplatePageState extends State<ExcelTemplatePage> {
             children: List.generate(sheets.length, (index) {
               final isSelected = index == sheetSelected;
 
-              return GestureDetector(
-                onSecondaryTapDown: (details) {
-                  showMenu(
-                    context: context,
-                    color: Theme.of(context).canvasColor,
-                    popUpAnimationStyle:
-                        AnimationStyle(duration: Durations.medium3),
-                    position: RelativeRect.fromLTRB(
-                      details.globalPosition.dx,
-                      details.globalPosition.dy,
-                      details.globalPosition.dx,
-                      details.globalPosition.dy,
+              return Material(
+                clipBehavior: Clip.antiAlias,
+                color: isSelected
+                    ? Theme.of(context).focusColor
+                    : Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(4.0),
+                ),
+                child: InkWell(
+                  splashFactory: NoSplash.splashFactory,
+                  onTap: () => excelTemplateProvider.setSheetSelected(index),
+                  child: AnimatedContainer(
+                    duration: Durations.short2,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 4.0,
                     ),
-                    items: [
-                      PopupMenuItem(
-                        child: const Text('Editar'),
-                        onTap: () => showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => SheetDialog(
-                            index: index,
-                            sheet: sheets[index],
-                          ),
+                    child: Stack(
+                      children: [
+                        Text(
+                          sheets[index].nameSheet,
+                          style: const TextStyle(fontSize: 16.0),
                         ),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('Eliminar'),
-                        onTap: () =>
-                            excelTemplateProvider.deleteSheet(sheets[index]),
-                      ),
-                    ],
-                  );
-                },
-                child: Material(
-                  clipBehavior: Clip.antiAlias,
-                  color: isSelected
-                      ? Theme.of(context).focusColor
-                      : Theme.of(context).cardColor,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(4.0),
-                  ),
-                  child: InkWell(
-                    splashFactory: NoSplash.splashFactory,
-                    onTap: () => excelTemplateProvider.setSheetSelected(index),
-                    child: AnimatedContainer(
-                      duration: Durations.short2,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
-                      child: Stack(
-                        children: [
-                          Text(
-                            sheets[index].nameSheet,
-                            style: const TextStyle(fontSize: 16.0),
-                          ),
-                          if (isSelected)
-                            Positioned(
-                              left: 0.0,
-                              right: 0.0,
-                              bottom: 0.0,
-                              child: Container(
-                                height: 2.0,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                        if (isSelected)
+                          Positioned(
+                            left: 0.0,
+                            right: 0.0,
+                            bottom: 0.0,
+                            child: Container(
+                              height: 2.0,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               );
             }),
           ),
-          _addSheetButton()
         ],
       ),
-    );
-  }
-
-  IconButton _addSheetButton() {
-    return IconButton(
-      style: ButtonStyle(
-        shape: const MaterialStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(4.0)),
-          ),
-        ),
-        backgroundColor: MaterialStatePropertyAll(
-          Theme.of(context).cardColor.withOpacity(0.3),
-        ),
-      ),
-      onPressed: () => showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const SheetDialog(),
-      ),
-      icon: const Icon(Icons.add),
     );
   }
 

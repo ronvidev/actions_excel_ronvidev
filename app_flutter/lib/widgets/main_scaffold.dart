@@ -19,6 +19,7 @@ class MainScaffold extends StatelessWidget {
     }
 
     return Material(
+      color: Colors.transparent,
       child: Column(
         children: [
           Container(
@@ -41,7 +42,7 @@ class MainScaffold extends StatelessWidget {
                       color: Colors.transparent,
                       constraints: const BoxConstraints.expand(),
                       alignment: Alignment.centerLeft,
-                      child: const Text("AutoCell"),
+                      child: const Text("AutoCells"),
                     ),
                   ),
                 ),

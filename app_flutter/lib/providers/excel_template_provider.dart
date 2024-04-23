@@ -30,10 +30,13 @@ class ExcelTemplateProvider extends ChangeNotifier {
   Future<void> getListTemplates() async {
     if (_templatesPath != null) {
       final directory = Directory(_templatesPath!);
+
       if (!directory.existsSync()) return;
+
       final listTemplates = directory.listSync().where((file) {
         return file.path.endsWith('.xlsx');
       }).toList();
+
       _templates = listTemplates.map((e) {
         return p.basenameWithoutExtension(e.path);
       }).toList();
@@ -50,8 +53,8 @@ class ExcelTemplateProvider extends ChangeNotifier {
   Future<void> setTemplateName(String? templateName) async {
     _templateName = templateName;
     Shared.saveTemplateName(templateName);
-    loadJson();
-    notifyListeners();
+    await loadJson();
+    await getSheetNames(templateName);
   }
 
   Future<void> setTemplatesPath(String templatesPath) async {
@@ -187,17 +190,42 @@ class ExcelTemplateProvider extends ChangeNotifier {
 
     if (_templatesPath == null) {
       final documentsDirectory = await getApplicationDocumentsDirectory();
-      _templatesPath =
-          await createFolder("${documentsDirectory.path}/$templatesFolder");
+      _templatesPath = "${documentsDirectory.path}/$templatesFolder";
+      _templatesPath = await createFolder(_templatesPath!);
     } else {
       _templatesPath = await createFolder(_templatesPath!);
     }
 
     await getListTemplates();
 
-    if (!_templates.contains(_templateName)) _templateName = null;
+    if (_templates.contains(_templateName)) {
+      await getSheetNames(_templateName);
+    } else {
+      _templateName = null;
+    }
 
-    loadJson();
+    await loadJson();
+  }
+
+  Future<void> getSheetNames(String? templateName) async {
+    final out = await Process.run(pyExe, [
+      getNameSheetsPyPath,
+      "$_templatesPath\\$templateName.xlsx",
+    ]);
+
+    final nameSheets = List<String>.from(jsonDecode(out.stdout));
+    for (final nameSheet in nameSheets) {
+      final sheetsExist = data.sheets.map((e) => e.nameSheet);
+      if (!sheetsExist.contains(nameSheet)) {
+        data.sheets.add(Sheet(
+          nameSheet: nameSheet,
+          textSlots: [],
+          imageSlots: [],
+        ));
+      }
+    }
+
+    await saveData();
   }
 
   Future<void> saveData() async {

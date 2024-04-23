@@ -1,7 +1,9 @@
+import 'package:autocells/config/constants.dart';
 import 'package:autocells/providers/app_provider.dart';
 import 'package:autocells/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,21 +35,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final appVersion = appProvider.versionApp;
     final newVersionApp = appProvider.newVersionApp;
 
-    return MainScaffold(
-      child: Column(
-        children: [
-          MainBar(
-            title: 'Configuración',
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () => Navigator.pop(context),
-            ),
+    return Column(
+      children: [
+        MainBar(
+          title: 'Configuración',
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () => Navigator.pop(context),
           ),
-          Expanded(
+        ),
+        Expanded(
+          child: Container(
+            color: Theme.of(context).colorScheme.background,
             child: _isReady
                 ? Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,13 +96,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             )
                           ],
                         ),
+                        const Expanded(
+                          child: SizedBox(),
+                        ),
+                        if (!notAds)
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () async => await launchUrl(
+                                    Uri.parse("https://instagram.com/ronvi.dev")),
+                                child: Text(
+                                  'Un software creado por Ronald Villarreal',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                              ),
+                              const Expanded(child: SizedBox()),
+                              InkWell(
+                                onTap: () async => await launchUrl(
+                                    Uri.parse("https://ko-fi.com/ronvidev")),
+                                child: Image.asset(
+                                  'assets/kofi_button_red.png',
+                                  width: 200.0,
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   )
                 : const Center(child: CircularProgressIndicator()),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

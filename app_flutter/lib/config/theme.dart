@@ -1,3 +1,4 @@
+import 'package:autocells/widgets/main_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class Themes {
@@ -126,29 +127,32 @@ class CustomPageTransitionsBuilder extends PageTransitionsBuilder {
       curve: Curves.easeOutQuad,
     );
 
-    return Stack(
-      children: [
-        FadeTransition(
-          opacity: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(curvedAnimation),
-          child: Container(color: Theme.of(context).primaryColor),
-        ),
-        SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0.0, 0.1),
-            end: Offset.zero,
-          ).animate(curvedAnimation),
-          child: FadeTransition(
-            opacity: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
+    return MainScaffold(
+      child: Stack(
+        children: [
+          // FadeTransition(
+          //   opacity: Tween<double>(
+          //     begin: 0.0,
+          //     end: 1.0,
+          //   ).animate(curvedAnimation),
+          //   // child: Container(color: Theme.of(context).primaryColor),
+          //   child: Container(color: Colors.amber),
+          // ),
+          SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.1),
+              end: Offset.zero,
             ).animate(curvedAnimation),
-            child: child,
+            child: FadeTransition(
+              opacity: Tween<double>(
+                begin: 0.0,
+                end: 1.0,
+              ).animate(curvedAnimation),
+              child: child,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

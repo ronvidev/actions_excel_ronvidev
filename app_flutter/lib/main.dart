@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-
   if (Platform.isWindows) {
-
+    WidgetsFlutterBinding.ensureInitialized();
+    await windowManager.ensureInitialized();
+    
     await windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+      await windowManager.setTitle('AutoCells');
       await windowManager.setMinimumSize(const Size(800, 500));
       await windowManager.show();
     });

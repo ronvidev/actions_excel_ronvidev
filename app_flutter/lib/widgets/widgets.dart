@@ -10,3 +10,4 @@ export 'photo_card.dart';
 export 'process_button.dart';
 export 'cell_tile.dart';
 export 'main_scaffold.dart';
+export 'ads_widget.dart';
