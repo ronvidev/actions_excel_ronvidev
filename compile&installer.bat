@@ -1,4 +1,4 @@
-SET VERSION=0.2.1
+SET VERSION=0.2.2
 
 @REM Compilar scripts de Python
 python -m compileall -b ./scripts

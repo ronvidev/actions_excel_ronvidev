@@ -1,7 +1,7 @@
 const isDev = true;
 // const isDev = false;
 
-const notAds = true;
+const isPrivate = true;
 
 const pyExe = "C:/Python/3.12.2/python.exe";
 
@@ -19,7 +19,7 @@ const docsFolder = nameApp;
 const templatesFolder = "$nameApp/templates";
 
 const kUriVersion = 'http://190.222.96.46:1234/version/auto-cells-version.txt';
-const kUriInstaller = notAds ? 'http://190.222.96.46:1234/download/auto-cells-setup.exe' : 'https://github.com/ronvidev/autocells/releases/download/$versionApp/$versionApp-auto-cells-setup.exe';
+const kUriInstaller = isPrivate ? 'http://190.222.96.46:1234/download/auto-cells-setup.exe' : 'https://github.com/ronvidev/autocells/releases/download/$versionApp/$versionApp-auto-cells-setup.exe';
 
 // Pages named
 const kHomeScreen = '/';

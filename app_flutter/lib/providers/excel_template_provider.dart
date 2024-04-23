@@ -202,9 +202,8 @@ class ExcelTemplateProvider extends ChangeNotifier {
       await getSheetNames(_templateName);
     } else {
       _templateName = null;
-    }
-
-    await loadJson();
+      await loadJson();
+    }    
   }
 
   Future<void> getSheetNames(String? templateName) async {
@@ -213,6 +212,8 @@ class ExcelTemplateProvider extends ChangeNotifier {
       "$_templatesPath\\$templateName.xlsx",
     ]);
 
+    await loadJson();
+    
     final nameSheets = List<String>.from(jsonDecode(out.stdout));
     for (final nameSheet in nameSheets) {
       final sheetsExist = data.sheets.map((e) => e.nameSheet);
@@ -224,8 +225,6 @@ class ExcelTemplateProvider extends ChangeNotifier {
         ));
       }
     }
-
-    await saveData();
   }
 
   Future<void> saveData() async {

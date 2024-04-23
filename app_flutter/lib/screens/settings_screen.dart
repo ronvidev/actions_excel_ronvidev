@@ -99,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const Expanded(
                           child: SizedBox(),
                         ),
-                        if (!notAds)
+                        if (!isPrivate)
                           Row(
                             children: [
                               InkWell(
